@@ -80,3 +80,20 @@ nav a:hover { color: #f5c542; }
   display: inline-block; margin-top: 12px; padding: 10px 24px; border-radius: 6px;
   background: #f5c542; color: #0b1e3f; font-weight: bold; text-decoration: none;
 } 
+
+.back-link { display: inline-block; margin-bottom: 16px; color: var(--accent); text-decoration: none; }
+
+.detail { display: flex; gap: 28px; flex-wrap: wrap; margin-bottom: 28px; }
+.detail-image { flex: 0 0 300px; max-width: 100%; }
+.detail-image img { width: 100%; border-radius: 12px; }
+.detail-image .no-image { height: 300px; }
+.detail-info { flex: 1; min-width: 260px; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin-top: 16px; }
+.stat { background: var(--card-bg); border-radius: 10px; padding: 12px; text-align: center; }
+.stat strong { display: block; font-size: 24px; color: var(--accent); }
+.stat span { font-size: 13px; color: var(--muted); }
+
+.list-section { margin-bottom: 20px; }
+.list-section ul { margin: 6px 0 0; padding-left: 20px; }
+.list-section li { margin-bottom: 4px; } 

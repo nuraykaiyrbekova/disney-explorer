@@ -1,11 +1,13 @@
 const express = require('express');
 const homeController = require('../controllers/homeController');
 const catalogController = require('../controllers/catalogController');
-const { validateCatalogQuery } = require('../middleware/validate');
+const characterController = require('../controllers/characterController');
+const { validateCatalogQuery, validateCharacterId } = require('../middleware/validate');
 
 const router = express.Router();
 
 router.get('/', homeController.showHome);
 router.get('/characters', validateCatalogQuery, catalogController.showCatalog);
+router.get('/character/:id', validateCharacterId, characterController.showCharacter);
 
 module.exports = router; 

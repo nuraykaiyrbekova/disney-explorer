@@ -20,11 +20,17 @@ async function getCharacterByName(name) {
   const data = response.data.data;
   const list = Array.isArray(data) ? data : [data];
 
-  // Сначала ищем точное совпадение имени, иначе берём первого
   const exact = list.find(
     (c) => c.name.toLowerCase() === name.toLowerCase()
   );
   return exact || list[0];
 }
 
-module.exports = { getCharacters, getCharacterByName }; 
+// Получить одного персонажа по ID
+async function getCharacterById(id) {
+  const response = await api.get(`/character/${id}`);
+  const data = response.data.data;
+  return Array.isArray(data) ? data[0] : data;
+}
+
+module.exports = { getCharacters, getCharacterByName, getCharacterById }; 

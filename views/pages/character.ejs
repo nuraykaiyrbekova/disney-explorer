@@ -1,0 +1,55 @@
+<%- include('../partials/header') %>
+
+<a class="back-link" href="/characters">← Back to characters</a>
+
+<section class="detail">
+  <div class="detail-image">
+    <% if (character.imageUrl) { %>
+      <img src="<%= character.imageUrl %>" alt="<%= character.name %>">
+    <% } else { %>
+      <div class="no-image">No image</div>
+    <% } %>
+  </div>
+
+  <div class="detail-info">
+    <h1><%= character.name %></h1>
+    <p class="count">Total appearances: <%= character.totalAppearances %></p>
+
+    <div class="stats">
+      <div class="stat"><strong><%= character.films.length %></strong><span>Films</span></div>
+      <div class="stat"><strong><%= character.shortFilms.length %></strong><span>Short films</span></div>
+      <div class="stat"><strong><%= character.tvShows.length %></strong><span>TV shows</span></div>
+      <div class="stat"><strong><%= character.videoGames.length %></strong><span>Video games</span></div>
+      <div class="stat"><strong><%= character.parkAttractions.length %></strong><span>Park attractions</span></div>
+    </div>
+  </div>
+</section>
+
+<%
+  const sections = [
+    { title: 'Films', items: character.films },
+    { title: 'Short films', items: character.shortFilms },
+    { title: 'TV shows', items: character.tvShows },
+    { title: 'Video games', items: character.videoGames },
+    { title: 'Park attractions', items: character.parkAttractions },
+    { title: 'Allies', items: character.allies },
+    { title: 'Enemies', items: character.enemies }
+  ];
+%>
+
+<% sections.forEach(function (s) { %>
+  <section class="list-section">
+    <h2><%= s.title %></h2>
+    <% if (s.items.length) { %>
+      <ul>
+        <% s.items.forEach(function (item) { %>
+          <li><%= item %></li>
+        <% }); %>
+      </ul>
+    <% } else { %>
+      <p class="count">No data</p>
+    <% } %>
+  </section>
+<% }); %>
+
+<%- include('../partials/footer') %> 
