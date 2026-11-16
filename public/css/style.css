@@ -1,3 +1,15 @@
+:root {
+  --bg: #0b1e3f;
+  --header-bg: #081530;
+  --card-bg: #13306b;
+  --placeholder-bg: #0b1e3f;
+  --text: #ffffff;
+  --muted: #aab4cc;
+  --accent: #f5c542;
+  --btn-text: #0b1e3f;
+}
+
+
 * { box-sizing: border-box; }
 
 body {
