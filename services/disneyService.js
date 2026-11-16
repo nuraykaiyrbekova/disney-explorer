@@ -12,7 +12,7 @@ async function getCharacters(page = 1, pageSize = 12) {
   return response.data;
 }
 
-// Найти одного персонажа по имени
+
 async function getCharacterByName(name) {
   const response = await api.get('/character', {
     params: { name }
@@ -26,11 +26,35 @@ async function getCharacterByName(name) {
   return exact || list[0];
 }
 
-// Получить одного персонажа по ID
+
 async function getCharacterById(id) {
   const response = await api.get(`/character/${id}`);
   const data = response.data.data;
   return Array.isArray(data) ? data[0] : data;
 }
 
-module.exports = { getCharacters, getCharacterByName, getCharacterById }; 
+
+async function searchCharacters(name, page = 1, pageSize = 12) {
+  try {
+    const response = await api.get('/character', {
+      params: { name, page, pageSize }
+    });
+    const data = response.data.data;
+    const list = Array.isArray(data) ? data : data ? [data] : [];
+    const totalPages = (response.data.info && response.data.info.totalPages) || 1;
+    return { list, totalPages };
+  } catch (err) {
+
+    if (err.response && err.response.status === 404) {
+      return { list: [], totalPages: 1 };
+    }
+    throw err;
+  }
+}
+
+module.exports = {
+  getCharacters,
+  getCharacterByName,
+  getCharacterById,
+  searchCharacters
+}; 

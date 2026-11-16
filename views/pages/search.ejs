@@ -1,0 +1,41 @@
+<%- include('../partials/header') %>
+
+<h1>Search results</h1>
+
+<form action="/search" method="GET" class="search-form">
+  <label for="q">Character name</label>
+  <input type="text" id="q" name="q" value="<%= q %>" placeholder="Mickey, Elsa...">
+  <button type="submit">Search</button>
+</form>
+
+<% if (characters.length === 0) { %>
+  <p class="count">No characters found for "<%= q %>". Try another name.</p>
+<% } else { %>
+  <p class="count">Found <%= characters.length %> characters on this page for "<%= q %>" · Page <%= page %> of <%= totalPages %></p>
+
+  <div class="grid">
+    <% characters.forEach(function (c) { %>
+      <a class="card" href="/character/<%= c.id %>">
+        <% if (c.imageUrl) { %>
+          <img src="<%= c.imageUrl %>" alt="<%= c.name %>">
+        <% } else { %>
+          <div class="no-image">No image</div>
+        <% } %>
+        <h3><%= c.name %></h3>
+        <p>🎬 <%= c.filmsCount %> · 📺 <%= c.tvShowsCount %></p>
+      </a>
+    <% }); %>
+  </div>
+
+  <nav class="pagination">
+    <% if (page > 1) { %>
+      <a href="/search?q=<%= encodeURIComponent(q) %>&page=<%= page - 1 %>">← Previous</a>
+    <% } %>
+    <span>Page <%= page %> of <%= totalPages %></span>
+    <% if (page < totalPages) { %>
+      <a href="/search?q=<%= encodeURIComponent(q) %>&page=<%= page + 1 %>">Next →</a>
+    <% } %>
+  </nav>
+<% } %>
+
+<%- include('../partials/footer') %> 
