@@ -54,3 +54,29 @@ nav a:hover { color: #f5c542; }
 }
 
 .site-footer { text-align: center; padding: 20px; color: #aaa; } 
+
+.toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.toolbar select { padding: 8px; border-radius: 6px; border: none; }
+.toolbar button {
+  padding: 8px 18px; border: none; border-radius: 6px;
+  background: #f5c542; color: #0b1e3f; font-weight: bold; cursor: pointer;
+}
+.count { color: #aab4cc; margin-bottom: 16px; }
+
+.pagination {
+  display: flex; justify-content: center; align-items: center;
+  gap: 20px; margin-top: 28px; flex-wrap: wrap;
+}
+.pagination a {
+  padding: 8px 18px; border-radius: 6px;
+  background: #f5c542; color: #0b1e3f; font-weight: bold; text-decoration: none;
+}
+
+.error-box {
+  max-width: 520px; margin: 40px auto; padding: 28px;
+  background: #13306b; border-radius: 12px; text-align: center;
+}
+.btn {
+  display: inline-block; margin-top: 12px; padding: 10px 24px; border-radius: 6px;
+  background: #f5c542; color: #0b1e3f; font-weight: bold; text-decoration: none;
+} 

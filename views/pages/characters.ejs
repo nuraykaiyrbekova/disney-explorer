@@ -1,0 +1,40 @@
+<%- include('../partials/header') %>
+
+<h1>Characters</h1>
+
+<form action="/characters" method="GET" class="toolbar">
+  <label for="sort">Sort by</label>
+  <select id="sort" name="sort">
+    <option value="name" <%= sort === 'name' ? 'selected' : '' %>>Name (A–Z)</option>
+    <option value="appearances" <%= sort === 'appearances' ? 'selected' : '' %>>Most appearances</option>
+  </select>
+  <button type="submit">Apply</button>
+</form>
+
+<p class="count">Page <%= page %> of <%= totalPages %> · <%= characters.length %> characters shown</p>
+
+<div class="grid">
+  <% characters.forEach(function (c) { %>
+    <a class="card" href="/character/<%= c.id %>">
+      <% if (c.imageUrl) { %>
+        <img src="<%= c.imageUrl %>" alt="<%= c.name %>">
+      <% } else { %>
+        <div class="no-image">No image</div>
+      <% } %>
+      <h3><%= c.name %></h3>
+      <p>🎬 <%= c.filmsCount %> · 📺 <%= c.tvShowsCount %></p>
+    </a>
+  <% }); %>
+</div>
+
+<nav class="pagination">
+  <% if (page > 1) { %>
+    <a href="/characters?page=<%= page - 1 %>&sort=<%= sort %>">← Previous</a>
+  <% } %>
+  <span>Page <%= page %> of <%= totalPages %></span>
+  <% if (page < totalPages) { %>
+    <a href="/characters?page=<%= page + 1 %>&sort=<%= sort %>">Next →</a>
+  <% } %>
+</nav>
+
+<%- include('../partials/footer') %> 
