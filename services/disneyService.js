@@ -12,4 +12,19 @@ async function getCharacters(page = 1, pageSize = 12) {
   return response.data;
 }
 
-module.exports = { getCharacters }; 
+// Найти одного персонажа по имени
+async function getCharacterByName(name) {
+  const response = await api.get('/character', {
+    params: { name }
+  });
+  const data = response.data.data;
+  const list = Array.isArray(data) ? data : [data];
+
+  // Сначала ищем точное совпадение имени, иначе берём первого
+  const exact = list.find(
+    (c) => c.name.toLowerCase() === name.toLowerCase()
+  );
+  return exact || list[0];
+}
+
+module.exports = { getCharacters, getCharacterByName }; 
