@@ -1,0 +1,51 @@
+<%- include('../partials/header') %>
+
+<h1>Top characters</h1>
+<p class="count">Ranking of the <%= ranking.length %> characters with the most appearances among <%= candidatesCount %> popular Disney characters.</p>
+
+<% if (ranking.length === 0) { %>
+  <p class="count">No data available right now. Please try again later.</p>
+<% } else { %>
+  <div class="table-wrap">
+    <table class="compare-table top-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Character</th>
+          <th>Films</th>
+          <th>TV shows</th>
+          <th>Games</th>
+          <th>Attractions</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% ranking.forEach(function (c, i) { %>
+          <tr>
+            <td><%= i + 1 %></td>
+            <td class="who">
+              <a href="/character/<%= c.id %>">
+                <% if (c.imageUrl) { %>
+                  <img src="<%= c.imageUrl %>" alt="<%= c.name %>">
+                <% } else { %>
+                  <span class="thumb-empty">?</span>
+                <% } %>
+                <span><%= c.name %></span>
+              </a>
+            </td>
+            <td><%= c.films %></td>
+            <td><%= c.tvShows %></td>
+            <td><%= c.videoGames %></td>
+            <td><%= c.attractions %></td>
+            <td class="total-cell">
+              <strong><%= c.total %></strong>
+              <div class="bar"><div class="bar-fill" style="width: <%= maxTotal ? Math.round(c.total / maxTotal * 100) : 0 %>%"></div></div>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+<% } %>
+
+<%- include('../partials/footer') %> 

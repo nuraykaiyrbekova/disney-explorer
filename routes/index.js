@@ -4,6 +4,7 @@ const catalogController = require('../controllers/catalogController');
 const characterController = require('../controllers/characterController');
 const searchController = require('../controllers/searchController');
 const compareController = require('../controllers/compareController');
+const topController = require('../controllers/topController');
 const {
   validateCatalogQuery,
   validateCharacterId,
@@ -18,5 +19,6 @@ router.get('/characters', validateCatalogQuery, catalogController.showCatalog);
 router.get('/character/:id', validateCharacterId, characterController.showCharacter);
 router.get('/search', validateSearch, searchController.showSearch);
 router.get('/compare', validateCompare, compareController.showCompare);
+router.get('/top', topController.showTop);
 
 module.exports = router; 
