@@ -116,6 +116,6 @@ npm start
 
 ## Author
 
-Student name / ID: _write your name and ID here_
+Student name: Nuray Kaiyrbekova 
 
 Course: VR 113153 Web Development II — Individual Project 
