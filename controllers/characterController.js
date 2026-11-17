@@ -2,17 +2,18 @@ const disneyService = require('../services/disneyService');
 
 async function showCharacter(req, res, next) {
   try {
+    // ID already validated by validateCharacterId
     const { id } = req.validated;
 
     let c;
     try {
       c = await disneyService.getCharacterById(id);
     } catch (err) {
-      // Если API ответило "не найдено", показываем понятное сообщение
+      // If the API says "not found", show a clear message to the user
       if (err.response && err.response.status === 404) {
         c = null;
       } else {
-        throw err; // остальные ошибки уходят в общий обработчик
+        throw err; // all other errors go to the centralized error handler
       }
     }
 
@@ -24,12 +25,14 @@ async function showCharacter(req, res, next) {
       });
     }
 
+    // Use empty lists if the API does not return a field
     const films = c.films || [];
     const shortFilms = c.shortFilms || [];
     const tvShows = c.tvShows || [];
     const videoGames = c.videoGames || [];
     const parkAttractions = c.parkAttractions || [];
 
+    // Data for the view, including the total number of appearances
     const character = {
       id: c._id,
       name: c.name,
@@ -49,6 +52,7 @@ async function showCharacter(req, res, next) {
         parkAttractions.length
     };
 
+    // Render views/pages/character.ejs
     res.render('pages/character', { title: character.name, character });
   } catch (err) {
     next(err);

@@ -1,7 +1,8 @@
+// Custom middleware: logs method, URL, status code and response time for every request
 function logger(req, res, next) {
   const start = Date.now();
 
-  // Когда ответ отправлен, пишем строку в консоль
+  // Runs when the response has been sent, then prints one line to the console
   res.on('finish', () => {
     const ms = Date.now() - start;
     const time = new Date().toISOString();

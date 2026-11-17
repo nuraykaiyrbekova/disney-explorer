@@ -1,5 +1,6 @@
 const disneyService = require('../services/disneyService');
 
+// Categories that are compared (key = field name in the API data)
 const CATEGORIES = [
   { key: 'films', label: 'Films' },
   { key: 'shortFilms', label: 'Short films' },
@@ -8,7 +9,7 @@ const CATEGORIES = [
   { key: 'parkAttractions', label: 'Park attractions' }
 ];
 
-// Найти персонажа по имени: сначала точное совпадение, иначе первый результат
+// Find a character by name: exact match first, otherwise the first result
 async function findByName(name) {
   const { list } = await disneyService.searchCharacters(name, 1, 20);
   if (list.length === 0) return null;
@@ -16,7 +17,7 @@ async function findByName(name) {
   return exact || list[0];
 }
 
-// Получить персонажа по ID; если API ответило 404, вернуть null
+// Get a character by ID; return null if the API answers 404
 async function findById(id) {
   try {
     return await disneyService.getCharacterById(id);
@@ -26,7 +27,7 @@ async function findById(id) {
   }
 }
 
-// Привести данные API к удобному виду (пустые списки вместо undefined)
+// Convert API data to a simple shape (empty lists instead of undefined) and count the total
 function toView(c) {
   const view = {
     id: c._id,
@@ -42,6 +43,7 @@ function toView(c) {
   return view;
 }
 
+// Items that appear in both lists (for example films with both characters)
 function shared(listA, listB) {
   return listA.filter((item) => listB.includes(item));
 }
@@ -50,14 +52,14 @@ async function showCompare(req, res, next) {
   try {
     const v = req.validated;
 
-    // Только форма
+    // Mode 'form': just show the empty form
     if (v.mode === 'form') {
       return res.render('pages/compare', {
         title: 'Compare', message: null, a: '', b: '', result: null
       });
     }
 
-    // Имена из формы: находим персонажей и перенаправляем на ?ids=
+    // Mode 'names': find both characters by name, then redirect to /compare?ids=...
     if (v.mode === 'names') {
       const [nameA, nameB] = v.names;
       const [charA, charB] = await Promise.all([findByName(nameA), findByName(nameB)]);
@@ -80,7 +82,7 @@ async function showCompare(req, res, next) {
       return res.redirect(`/compare?ids=${charA._id},${charB._id}`);
     }
 
-    // Два ID: сравниваем
+    // Mode 'ids': load both characters in parallel and compare them
     const [rawA, rawB] = await Promise.all(v.ids.map(findById));
     if (!rawA || !rawB) {
       return res.status(404).render('pages/error', {
@@ -93,6 +95,7 @@ async function showCompare(req, res, next) {
     const left = toView(rawA);
     const right = toView(rawB);
 
+    // Build one table row per category and decide who has more
     const rows = CATEGORIES.map((cat) => {
       const l = left[cat.key].length;
       const r = right[cat.key].length;
@@ -104,6 +107,7 @@ async function showCompare(req, res, next) {
       };
     });
 
+    // Last row: total appearances
     rows.push({
       label: 'Total appearances',
       left: left.total,
@@ -111,6 +115,7 @@ async function showCompare(req, res, next) {
       winner: left.total > right.total ? 'left' : right.total > left.total ? 'right' : 'tie'
     });
 
+    // Everything the view needs: both characters, rows and shared items
     const result = {
       left,
       right,
@@ -128,6 +133,7 @@ async function showCompare(req, res, next) {
       result
     });
   } catch (err) {
+    // Pass any error to the centralized error handler
     next(err);
   }
 }

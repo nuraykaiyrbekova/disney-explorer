@@ -1,3 +1,5 @@
+// Controller for the Top page: loads popular characters, calculates the total number
+// of appearances for each one and shows the 10 with the most.
 const disneyService = require('../services/disneyService');
 
 
@@ -10,12 +12,16 @@ const CANDIDATES = [
   'Tinker Bell', 'Maleficent', 'Hercules', 'Tarzan', 'Pocahontas'
 ];
 
+// How many characters are shown in the ranking
 const TOP_SIZE = 10;
-const CACHE_MS = 10 * 60 * 1000; // 10 минут
+const CACHE_MS = 10 * 60 * 1000; // 10 minutes
 
 
+// Simple in-memory cache: the ranking needs 30 API requests, so the result is
+// reused for 10 minutes to keep the page fast and avoid API rate limits
 let cache = { time: 0, data: null };
 
+// Build the ranking (or return the cached one)
 async function loadRanking() {
   if (cache.data && Date.now() - cache.time < CACHE_MS) {
     return cache.data;
@@ -27,11 +33,13 @@ async function loadRanking() {
   );
 
 
+  // If every request failed, the API is down: pass the error on to the error handler
   const failed = results.filter((r) => r.status === 'rejected');
   if (failed.length === results.length) {
     throw failed[0].reason;
   }
 
+  // Remove duplicates, calculate totals, sort from most to least, take the top 10
   const seen = new Set();
   const ranking = results
     .filter((r) => r.status === 'fulfilled' && r.value)
@@ -65,9 +73,11 @@ async function loadRanking() {
   return ranking;
 }
 
+// Handler for GET /top
 async function showTop(req, res, next) {
   try {
     const ranking = await loadRanking();
+    // The biggest total is used to draw the progress bars in the view
     const maxTotal = ranking.length ? ranking[0].total : 0;
 
     res.render('pages/top', {
@@ -77,6 +87,7 @@ async function showTop(req, res, next) {
       candidatesCount: CANDIDATES.length
     });
   } catch (err) {
+    // Pass any error to the centralized error handler
     next(err);
   }
 }

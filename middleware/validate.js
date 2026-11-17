@@ -1,3 +1,4 @@
+// Helper: show the error page with a status code and a message
 function renderError(res, status, message) {
   return res.status(status).render('pages/error', {
     title: 'Error',
@@ -6,10 +7,12 @@ function renderError(res, status, message) {
   });
 }
 
+// Validates ?page and ?sort for the catalog. Missing values get defaults.
 function validateCatalogQuery(req, res, next) {
   const rawPage = req.query.page === undefined ? '1' : String(req.query.page);
   const sort = req.query.sort === undefined ? 'name' : String(req.query.sort);
 
+  // Regular expression: positive whole number only (no zero, letters or minus sign)
   if (!/^[1-9][0-9]*$/.test(rawPage)) {
     return renderError(res, 400, 'Page number must be a positive whole number.');
   }
@@ -18,10 +21,12 @@ function validateCatalogQuery(req, res, next) {
     return renderError(res, 400, 'Sort option must be "name" or "appearances".');
   }
 
+  // Save cleaned values (numbers, not strings) for the controller
   req.validated = { page: Number(rawPage), sort };
   next();
 }
 
+// Validates the :id part of /character/:id
 function validateCharacterId(req, res, next) {
   const id = String(req.params.id);
 
@@ -33,6 +38,7 @@ function validateCharacterId(req, res, next) {
   next();
 }
 
+// Validates the search text (?q) and page number
 function validateSearch(req, res, next) {
   const q = req.query.q === undefined ? '' : String(req.query.q).trim();
   const rawPage = req.query.page === undefined ? '1' : String(req.query.page);
@@ -45,6 +51,7 @@ function validateSearch(req, res, next) {
     return renderError(res, 400, 'Search text must be between 2 and 50 characters.');
   }
 
+  // Allowed characters: letters of any language, spaces, hyphens, apostrophes and periods
   if (!/^[\p{L}\s'.\-]+$/u.test(q)) {
     return renderError(
       res,
@@ -61,11 +68,11 @@ function validateSearch(req, res, next) {
   next();
 }
 
-// Сравнение: либо ?ids=1,2, либо ?a=имя&b=имя, либо просто форма
+// Validates /compare. Three modes: two IDs, two names, or just show the form
 function validateCompare(req, res, next) {
   const { ids, a, b } = req.query;
 
-  // Режим 1: два ID
+  // Mode 1: two IDs, for example ?ids=308,317
   if (ids !== undefined) {
     const parts = String(ids).split(',').map((s) => s.trim());
 
@@ -80,7 +87,7 @@ function validateCompare(req, res, next) {
     return next();
   }
 
-  // Режим 2: два имени из формы
+  // Mode 2: two names from the form, ?a=name&b=name
   if (a !== undefined || b !== undefined) {
     const names = [a, b].map((v) => (v === undefined ? '' : String(v).trim()));
 
@@ -104,7 +111,7 @@ function validateCompare(req, res, next) {
     return next();
   }
 
-  // Режим 3: просто показать форму
+  // Mode 3: no parameters, just show the empty form
   req.validated = { mode: 'form' };
   next();
 }
