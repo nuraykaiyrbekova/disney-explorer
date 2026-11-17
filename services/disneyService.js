@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 const api = axios.create({
-  baseURL: 'https://api.disneyapi.dev',
+  baseURL: process.env.DISNEY_API_URL || 'https://api.disneyapi.dev',
   timeout: 8000 
 });
  
