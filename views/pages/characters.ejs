@@ -2,7 +2,8 @@
 
 <h1>Characters</h1>
 
-<form action="/characters" method="GET" class="toolbar">
+<%# Панель фильтров: форма лежит в отдельном блоке %>
+<form action="/characters" method="GET" class="toolbar filter-panel">
   <label for="sort">Sort by</label>
   <select id="sort" name="sort">
     <option value="name" <%= sort === 'name' ? 'selected' : '' %>>Name (A–Z)</option>
@@ -11,19 +12,21 @@
   <button type="submit">Apply</button>
 </form>
 
+<%# Ряд карточек со статистикой, считается в catalogController %>
+<% if (stats) { %>
+<section class="summary">
+  <div class="summary-item"><strong><%= stats.shown %></strong><span>characters on this page</span></div>
+  <div class="summary-item"><strong><%= totalPages %></strong><span>pages in catalog</span></div>
+  <div class="summary-item"><strong><%= stats.topCount %></strong><span>most appearances: <%= stats.topName %></span></div>
+  <div class="summary-item"><strong><%= stats.average %></strong><span>average appearances</span></div>
+</section>
+<% } %>
+
 <p class="count">Page <%= page %> of <%= totalPages %> · <%= characters.length %> characters shown</p>
 
 <div class="grid">
   <% characters.forEach(function (c) { %>
-    <a class="card" href="/character/<%= c.id %>">
-      <% if (c.imageUrl) { %>
-        <img src="<%= c.imageUrl %>" alt="<%= c.name %>">
-      <% } else { %>
-        <div class="no-image">No image</div>
-      <% } %>
-      <h3><%= c.name %></h3>
-      <p>🎬 <%= c.filmsCount %> · 📺 <%= c.tvShowsCount %></p>
-    </a>
+    <%- include('../partials/card', { c: c }) %>
   <% }); %>
 </div>
 

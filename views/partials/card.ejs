@@ -1,0 +1,20 @@
+<%# Карточка персонажа. Использование: include('../partials/card', { c: character }) %>
+<a class="card" href="/character/<%= c.id %>">
+  <% if (c.imageUrl) { %>
+    <img src="<%= c.imageUrl %>" alt="<%= c.name %>">
+  <% } else { %>
+    <div class="no-image">No image</div>
+  <% } %>
+  <h3><%= c.name %></h3>
+
+  <%# Теги показываем только если счётчик больше нуля %>
+  <div class="tags">
+    <% if (c.filmsCount > 0) { %><span class="tag tag-film">🎬 Films: <%= c.filmsCount %></span><% } %>
+    <% if (c.tvShowsCount > 0) { %><span class="tag tag-tv">📺 TV: <%= c.tvShowsCount %></span><% } %>
+    <% if (c.videoGamesCount > 0) { %><span class="tag tag-game">🎮 Games: <%= c.videoGamesCount %></span><% } %>
+    <% if (!(c.filmsCount > 0) && !(c.tvShowsCount > 0) && !(c.videoGamesCount > 0)) { %>
+      <span class="tag tag-empty">No appearances listed</span>
+    <% } %>
+  </div>
+</a>
+

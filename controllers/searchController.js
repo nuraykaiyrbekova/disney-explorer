@@ -12,7 +12,8 @@ async function showSearch(req, res, next) {
         name: c.name,
         imageUrl: c.imageUrl || null,
         filmsCount: (c.films || []).length,
-        tvShowsCount: (c.tvShows || []).length
+        tvShowsCount: (c.tvShows || []).length,
+        videoGamesCount: (c.videoGames || []).length
       }))
       .sort((a, b) => a.name.localeCompare(b.name));
 

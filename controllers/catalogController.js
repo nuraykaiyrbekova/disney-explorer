@@ -23,6 +23,7 @@ async function showCatalog(req, res, next) {
       imageUrl: c.imageUrl || null,
       filmsCount: c.films.length,
       tvShowsCount: c.tvShows.length,
+      videoGamesCount: c.videoGames.length,
       totalAppearances:
         c.films.length +
         c.shortFilms.length +
@@ -38,12 +39,26 @@ async function showCatalog(req, res, next) {
       characters.sort((a, b) => b.totalAppearances - a.totalAppearances);
     }
 
+    // Статистика для ряда карточек над каталогом (по персонажам текущей страницы)
+    let stats = null;
+    if (characters.length > 0) {
+      const top = characters.reduce((best, c) => (c.totalAppearances > best.totalAppearances ? c : best));
+      const sum = characters.reduce((acc, c) => acc + c.totalAppearances, 0);
+      stats = {
+        shown: characters.length,
+        topName: top.name,
+        topCount: top.totalAppearances,
+        average: (sum / characters.length).toFixed(1)
+      };
+    }
+
     res.render('pages/characters', {
       title: 'Characters',
       characters,
       page,
       totalPages,
-      sort
+      sort,
+      stats
     });
   } catch (err) {
     next(err);

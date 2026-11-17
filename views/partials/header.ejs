@@ -15,5 +15,11 @@
       <a href="/top">Top</a>
       <a href="/compare">Compare</a>
     </nav>
+    <%# Поиск в шапке: виден на каждой странице, отправляет GET /search?q=... %>
+    <form action="/search" method="GET" class="header-search">
+      <label for="header-q" class="visually-hidden">Search characters</label>
+      <input type="text" id="header-q" name="q" placeholder="Search character...">
+      <button type="submit">Search</button>
+    </form>
   </header>
   <main class="container"> 

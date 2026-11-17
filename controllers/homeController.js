@@ -21,7 +21,8 @@ async function showHome(req, res, next) {
         name: c.name,
         imageUrl: c.imageUrl || null,
         filmsCount: c.films.length,
-        tvShowsCount: c.tvShows.length
+        tvShowsCount: c.tvShows.length,
+        videoGamesCount: c.videoGames.length
       }));
 
     res.render('pages/home', { title: 'Home', characters });

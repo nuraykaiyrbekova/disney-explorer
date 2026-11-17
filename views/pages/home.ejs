@@ -12,15 +12,7 @@
 <h2>Featured characters</h2>
 <div class="grid">
   <% characters.forEach(function (c) { %>
-    <a class="card" href="/character/<%= c.id %>">
-      <% if (c.imageUrl) { %>
-        <img src="<%= c.imageUrl %>" alt="<%= c.name %>">
-      <% } else { %>
-        <div class="no-image">No image</div>
-      <% } %>
-      <h3><%= c.name %></h3>
-      <p>🎬 <%= c.filmsCount %> · 📺 <%= c.tvShowsCount %></p>
-    </a>
+    <%- include('../partials/card', { c: c }) %>
   <% }); %>
 </div>
 
