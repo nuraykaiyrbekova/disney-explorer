@@ -1,0 +1,80 @@
+<%- include('../partials/header') %>
+
+<h1>Compare characters</h1>
+
+<form action="/compare" method="GET" class="compare-form">
+  <div>
+    <label for="a">First character</label>
+    <input type="text" id="a" name="a" value="<%= a %>" placeholder="Mickey Mouse">
+  </div>
+  <div>
+    <label for="b">Second character</label>
+    <input type="text" id="b" name="b" value="<%= b %>" placeholder="Minnie Mouse">
+  </div>
+  <button type="submit">Compare</button>
+</form>
+
+<% if (message) { %>
+  <p class="form-message"><%= message %></p>
+<% } %>
+
+<% if (result) { %>
+  <section class="compare-heads">
+    <% [result.left, result.right].forEach(function (c) { %>
+      <a class="card" href="/character/<%= c.id %>">
+        <% if (c.imageUrl) { %>
+          <img src="<%= c.imageUrl %>" alt="<%= c.name %>">
+        <% } else { %>
+          <div class="no-image">No image</div>
+        <% } %>
+        <h3><%= c.name %></h3>
+      </a>
+    <% }); %>
+  </section>
+
+  <div class="table-wrap">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th><%= result.left.name %></th>
+          <th><%= result.right.name %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% result.rows.forEach(function (row) { %>
+          <tr>
+            <td><%= row.label %></td>
+            <td class="<%= row.winner === 'left' ? 'winner' : '' %>"><%= row.left %></td>
+            <td class="<%= row.winner === 'right' ? 'winner' : '' %>"><%= row.right %></td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+
+  <%
+    const sharedBlocks = [
+      { title: 'Shared films', items: result.sharedFilms },
+      { title: 'Shared TV shows', items: result.sharedTvShows },
+      { title: 'Shared video games', items: result.sharedGames }
+    ];
+  %>
+
+  <% sharedBlocks.forEach(function (s) { %>
+    <section class="list-section">
+      <h2><%= s.title %></h2>
+      <% if (s.items.length) { %>
+        <ul>
+          <% s.items.forEach(function (item) { %>
+            <li><%= item %></li>
+          <% }); %>
+        </ul>
+      <% } else { %>
+        <p class="count">No shared items</p>
+      <% } %>
+    </section>
+  <% }); %>
+<% } %>
+
+<%- include('../partials/footer') %> 

@@ -33,7 +33,6 @@ function validateCharacterId(req, res, next) {
   next();
 }
 
-// Поисковый запрос: обязателен, 2-50 символов, буквы, пробелы, дефис, апостроф, точка
 function validateSearch(req, res, next) {
   const q = req.query.q === undefined ? '' : String(req.query.q).trim();
   const rawPage = req.query.page === undefined ? '1' : String(req.query.page);
@@ -62,8 +61,57 @@ function validateSearch(req, res, next) {
   next();
 }
 
+// Сравнение: либо ?ids=1,2, либо ?a=имя&b=имя, либо просто форма
+function validateCompare(req, res, next) {
+  const { ids, a, b } = req.query;
+
+  // Режим 1: два ID
+  if (ids !== undefined) {
+    const parts = String(ids).split(',').map((s) => s.trim());
+
+    if (parts.length !== 2 || !parts.every((p) => /^[1-9][0-9]*$/.test(p))) {
+      return renderError(res, 400, 'Compare needs exactly two character IDs, for example ids=308,317.');
+    }
+    if (parts[0] === parts[1]) {
+      return renderError(res, 400, 'Please choose two different characters.');
+    }
+
+    req.validated = { mode: 'ids', ids: parts.map(Number) };
+    return next();
+  }
+
+  // Режим 2: два имени из формы
+  if (a !== undefined || b !== undefined) {
+    const names = [a, b].map((v) => (v === undefined ? '' : String(v).trim()));
+
+    for (const name of names) {
+      if (name.length < 2 || name.length > 50) {
+        return renderError(res, 400, 'Each name must be between 2 and 50 characters.');
+      }
+      if (!/^[\p{L}\s'.\-]+$/u.test(name)) {
+        return renderError(
+          res,
+          400,
+          'Names can contain only letters, spaces, hyphens, apostrophes and periods.'
+        );
+      }
+    }
+    if (names[0].toLowerCase() === names[1].toLowerCase()) {
+      return renderError(res, 400, 'Please choose two different characters.');
+    }
+
+    req.validated = { mode: 'names', names };
+    return next();
+  }
+
+  // Режим 3: просто показать форму
+  req.validated = { mode: 'form' };
+  next();
+}
+
 module.exports = {
   validateCatalogQuery,
   validateCharacterId,
-  validateSearch
+  validateSearch,
+  validateCompare
 }; 
