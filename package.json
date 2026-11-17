@@ -1,13 +1,13 @@
 {
   "name": "disney-explorer",
   "version": "1.0.0",
-  "description": "",
+  "description": "Disney character explorer using the Disney API",
   "main": "index.js",
   "scripts": {
     "start": "node app.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Nuray Kaiyrbekova",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
@@ -16,4 +16,4 @@
     "ejs": "^7.0.2",
     "express": "^5.3.0"
   }
-}
+} 
